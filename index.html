@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Swaw CMD</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Swaw Interactive CMD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
       background-color: black;
       color: #00ff00;
       font-family: 'Courier New', monospace;
-      font-size: 12px;
-      padding: 15px;
+      font-size: 14px;
       margin: 0;
+      padding: 15px;
     }
+    /* تدرج ألوان للبانر */
     .banner-line {
       line-height: 1;
       white-space: pre;
       margin: 0;
+      user-select: none;
     }
     .line1 { color: rgb(0, 255, 0); }
     .line2 { color: rgb(0, 220, 0); }
@@ -24,14 +26,99 @@
     .line4 { color: rgb(0, 180, 0); }
     .line5 { color: rgb(0, 160, 0); }
     .line6 { color: rgb(0, 140, 0); }
+
+    /* توقيع تحت البانر على اليمين */
+    .footer {
+      text-align: right;
+      font-size: 11px;
+      color: #00cc00;
+      margin: 5px 0 20px 0;
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    /* الطرفية */
+    #terminal {
+      white-space: pre-wrap;
+      outline: none;
+      min-height: 300px;
+      max-height: 60vh;
+      overflow-y: auto;
+      border: 1px solid #00cc00;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    .prompt {
+      color: #00cc00;
+      user-select: none;
+    }
   </style>
 </head>
 <body>
-<pre class="banner-line line1">           ███████╗██╗    ██╗ █████╗ ██╗    ██╗</pre>
-<pre class="banner-line line2">           ██╔════╝██║    ██║██╔══██╗██║    ██║</pre>
-<pre class="banner-line line3">           ███████╗██║ █╗ ██║███████║██║ █╗ ██║</pre>
-<pre class="banner-line line4">           ╚════██║██║███╗██║██╔══██║██║███╗██║</pre>
-<pre class="banner-line line5">           ███████║╚███╔███╔╝██║  ██║╚███╔███╔╝</pre>
-<pre class="banner-line line6">           ╚══════╝ ╚══╝╚══╝ ╚═╝  ╚═╝ ╚══╝╚══╝</pre>
+
+  <!-- البانر -->
+  <pre class="banner-line line1">███████╗██╗    ██╗ █████╗ ██╗    ██╗</pre>
+  <pre class="banner-line line2">██╔════╝██║    ██║██╔══██╗██║    ██║</pre>
+  <pre class="banner-line line3">███████╗██║ █╗ ██║███████║██║ █╗ ██║</pre>
+  <pre class="banner-line line4">╚════██║██║███╗██║██╔══██║██║███╗██║</pre>
+  <pre class="banner-line line5">███████║╚███╔███╔╝██║  ██║╚███╔███╔╝</pre>
+  <pre class="banner-line line6">╚══════╝ ╚══╝╚══╝ ╚═╝  ╚═╝ ╚══╝╚══╝</pre>
+
+  <div class="footer">Development By Swaw 305</div>
+
+  <!-- الطرفية التفاعلية -->
+  <div id="terminal" tabindex="0"></div>
+
+  <script>
+    const terminal = document.getElementById('terminal');
+    const promptText = 'C:\\Users\\Swaw> ';
+    let input = '';
+
+    // عرض البادئة عند البداية
+    terminal.textContent = promptText;
+
+    terminal.addEventListener('keydown', (e) => {
+      e.preventDefault();
+
+      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
+        // إضافة حرف للادخال
+        input += e.key;
+        terminal.textContent += e.key;
+      } else if (e.key === 'Backspace') {
+        // حذف آخر حرف
+        if (input.length > 0) {
+          input = input.slice(0, -1);
+          terminal.textContent = terminal.textContent.slice(0, -1);
+        }
+      } else if (e.key === 'Enter') {
+        // تنفيذ الأمر وهمي مع ردود بسيطة
+        const command = input.trim().toLowerCase();
+        let output = '';
+
+        if (command === 'help') {
+          output = '\nAvailable commands:\nhelp - show this message\nclear - clear screen\nabout - about this terminal\n';
+        } else if (command === 'clear') {
+          terminal.textContent = '';
+        } else if (command === 'about') {
+          output = '\nSwaw 305 Interactive CMD Emulator\nCreated by Swaw\n';
+        } else if (command === '') {
+          output = '\n';
+        } else {
+          output = `\nCommand "${input}" not found.\n`;
+        }
+
+        if (command !== 'clear') {
+          terminal.textContent += output + promptText;
+        }
+        input = '';
+      }
+
+      // نزّل الشاشة لو صارت طويلة
+      terminal.scrollTop = terminal.scrollHeight;
+    });
+  </script>
+
 </body>
 </html>
