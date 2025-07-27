@@ -14,7 +14,7 @@
   }
   .login-container {
     width: 300px;
-    margin: 20px 0 20px 0;
+    margin: 20px 0;
     border: 1px solid #00cc00;
     padding: 20px;
     box-sizing: border-box;
@@ -49,7 +49,7 @@
     background: #00ff00;
   }
   .error {
-    color: red;
+    color: orange;
     font-weight: bold;
     margin-bottom: 10px;
     font-family: 'Courier New', monospace;
@@ -89,11 +89,12 @@
     white-space: pre-wrap;
     overflow-y: auto;
     outline: none;
+    display: none;
   }
   .line-block, .input-line {
     margin: 0;
     padding: 0;
-    line-height: 1;
+    line-height: 1.2;
     user-select: none;
   }
   .input-line {
@@ -131,7 +132,7 @@
 
 <!-- شاشة تسجيل الدخول -->
 <div id="login" class="login-container">
-  <div id="errorMsg" class="error" style="display:none;">Invalid username or password!</div>
+  <div id="errorMsg" class="error" style="display:none;">Wrong password. Try again.</div>
   <label for="username">Username:</label>
   <input id="username" type="text" autocomplete="off" />
   <label for="password">Password:</label>
@@ -140,7 +141,7 @@
 </div>
 
 <!-- الطرفية -->
-<div id="terminal" style="display:none;"></div>
+<div id="terminal"></div>
 
 <script>
   const loginDiv = document.getElementById('login');
@@ -161,7 +162,6 @@
   }
 
   function printPrompt() {
-    // طباعة السطر الحالي مع السهم والادخال في نفس السطر وبدون فراغ
     const inputWrap = document.createElement("div");
     inputWrap.className = "input-line";
 
@@ -174,13 +174,11 @@
     input.autocomplete = "off";
     input.spellcheck = false;
 
-    // حدث مفتاح Enter لمعالجة الأمر
     input.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
         const cmd = input.value.trim();
-        if (!cmd) return; // تجاهل الأوامر الفارغة
-
+        if (!cmd) return;
         input.disabled = true;
         inputWrap.removeChild(input);
 
@@ -203,10 +201,10 @@
     let output = '';
     switch(cmd.toLowerCase()) {
       case 'help':
-        output = 'Available commands:\nhelp - show this message\nclear - clear screen\nabout - info about terminal\n';
+        output = 'Available commands:\nhelp - show this message\nclear - clear screen\nabout - info about terminal';
         break;
       case 'clear':
-        terminal.textContent = '';
+        terminal.innerHTML = '';
         printHeader();
         printPrompt();
         return;
@@ -220,7 +218,6 @@
     const outputLine = document.createElement("div");
     outputLine.textContent = output;
     terminal.appendChild(outputLine);
-
     printPrompt();
   }
 
@@ -240,9 +237,7 @@
 
   [usernameInput, passwordInput].forEach(input => {
     input.addEventListener('keydown', (e) => {
-      if(e.key === 'Enter') {
-        loginBtn.click();
-      }
+      if(e.key === 'Enter') loginBtn.click();
     });
   });
 </script>
