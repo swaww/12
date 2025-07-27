@@ -7,22 +7,10 @@
 <style>
   body {
     background-color: black;
-    margin: 0;
-    padding: 15px;
-    font-family: 'Courier New', monospace;
-  }
-  textarea {
-    background-color: black;
     color: #00ff00;
-    font-size: 14px;
-    border: 1px solid #00cc00;
-    width: 100%;
-    height: 60vh;
-    resize: none;
-    outline: none;
-    padding: 10px;
-    box-sizing: border-box;
-    line-height: 1.2;
+    font-family: 'Courier New', monospace;
+    padding: 15px;
+    margin: 0;
   }
   .banner-line {
     line-height: 1;
@@ -44,10 +32,28 @@
     font-weight: bold;
     user-select: none;
   }
+  #terminal {
+    width: 100%;
+    height: 60vh;
+    background-color: black;
+    border: 1px solid #00cc00;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    padding: 10px;
+    box-sizing: border-box;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    outline: none;
+  }
+  .prompt {
+    display: inline;
+  }
 </style>
 </head>
 <body>
 
+<!-- البنر -->
 <pre class="banner-line line1">███████╗██╗    ██╗ █████╗ ██╗    ██╗</pre>
 <pre class="banner-line line2">██╔════╝██║    ██║██╔══██╗██║    ██║</pre>
 <pre class="banner-line line3">███████╗██║ █╗ ██║███████║██║ █╗ ██║</pre>
@@ -57,62 +63,83 @@
 
 <div class="footer">Development By Swaw 305</div>
 
-<textarea id="terminal" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>
+<!-- الطرفية -->
+<pre id="terminal" contenteditable spellcheck="false"></pre>
 
 <script>
   const terminal = document.getElementById('terminal');
-  const prompt = '╚════> ';
-  let commandStart = 0;
+  const promptStr = '╚════> ';
+  
+  function appendPrompt() {
+    const promptSpan = document.createElement('span');
+    promptSpan.classList.add('prompt');
+    promptSpan.textContent = promptStr;
+    terminal.appendChild(promptSpan);
+    
+    // Create a span for user input
+    const inputSpan = document.createElement('span');
+    inputSpan.contentEditable = true;
+    inputSpan.spellcheck = false;
+    inputSpan.id = 'input';
+    terminal.appendChild(inputSpan);
+    
+    // Set focus on input span
+    placeCaretAtEnd(inputSpan);
+  }
 
-  function init() {
-    terminal.value = prompt;
-    commandStart = terminal.value.length;
-    terminal.focus();
+  // Helper to put caret at end of element
+  function placeCaretAtEnd(el) {
+    el.focus();
+    if (typeof window.getSelection != "undefined" && typeof document.createRange != "undefined") {
+      var range = document.createRange();
+      range.selectNodeContents(el);
+      range.collapse(false);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
   }
 
   function processCommand(cmd) {
     let output = '';
     switch(cmd.trim().toLowerCase()) {
       case 'help':
-        output = '\nAvailable commands:\nhelp - show this message\nclear - clear screen\nabout - about this terminal\n';
+        output = 'Available commands:\nhelp - show this message\nclear - clear screen\nabout - info about terminal\n';
         break;
       case 'clear':
-        terminal.value = '';
-        init();
+        terminal.textContent = '';
+        appendPrompt();
         return;
       case 'about':
-        output = '\nSwaw 305 Interactive CMD Emulator\nCreated by Swaw\n';
+        output = 'Simple CMD Emulator by Swaw 305\n';
         break;
       default:
-        output = `\nCommand "${cmd}" not found.\n`;
+        output = `Command "${cmd}" not found.\n`;
     }
-    terminal.value += output + prompt;
-    commandStart = terminal.value.length;
+    // Remove input span to finalize command line
+    const inputSpan = document.getElementById('input');
+    if(inputSpan) {
+      inputSpan.contentEditable = false;
+      inputSpan.id = '';
+    }
+    // Append output and new prompt
+    terminal.appendChild(document.createTextNode('\n' + output));
+    appendPrompt();
   }
 
   terminal.addEventListener('keydown', (e) => {
-    if (terminal.selectionStart < commandStart) {
-      terminal.selectionStart = terminal.selectionEnd = terminal.value.length;
-    }
-
+    const inputSpan = document.getElementById('input');
+    if(!inputSpan) return;
+    
     if (e.key === 'Enter') {
       e.preventDefault();
-      const cmd = terminal.value.substring(commandStart).trimEnd();
+      const cmd = inputSpan.textContent;
       processCommand(cmd);
     }
-
-    if (e.key === 'Backspace' && terminal.selectionStart <= commandStart) {
-      e.preventDefault();
-    }
   });
 
-  terminal.addEventListener('click', () => {
-    if (terminal.selectionStart < commandStart) {
-      terminal.selectionStart = terminal.selectionEnd = terminal.value.length;
-    }
-  });
-
-  init();
+  // Initialize terminal with prompt
+  appendPrompt();
 </script>
 
 </body>
