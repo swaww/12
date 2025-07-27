@@ -1,126 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Swaw CMD Emulator</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body {
-      background-color: black;
-      color: #00ff00;
-      font-family: 'Courier New', monospace;
-      padding: 15px;
-      margin: 0;
-    }
+<meta charset="UTF-8" />
+<title>Swaw CMD Emulator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  body {
+    background-color: black;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    padding: 15px;
+    margin: 0;
+  }
+  .login-container {
+    width: 300px;
+    margin: 20px 0 20px 0;
+    border: 1px solid #00cc00;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  label, input {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    background: black;
+    border: 1px solid #00cc00;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    padding: 5px;
+    box-sizing: border-box;
+  }
+  input:focus {
+    outline: none;
+    border-color: #00ff00;
+  }
+  button {
+    background: #00cc00;
+    border: none;
+    color: black;
+    font-weight: bold;
+    padding: 8px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+  }
+  button:hover {
+    background: #00ff00;
+  }
+  .error {
+    color: red;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-family: 'Courier New', monospace;
+  }
+  .banner-line {
+    line-height: 1;
+    margin: 0;
+    padding: 0;
+    white-space: pre;
+    user-select: none;
+  }
+  .line1 { color: rgb(0, 255, 0); }
+  .line2 { color: rgb(0, 220, 0); }
+  .line3 { color: rgb(0, 200, 0); }
+  .line4 { color: rgb(0, 180, 0); }
+  .line5 { color: rgb(0, 160, 0); }
+  .line6 { color: rgb(0, 140, 0); }
 
-    .banner-line {
-      line-height: 1;
-      margin: 0;
-      white-space: pre;
-      user-select: none;
-    }
-
-    .line1 { color: rgb(0, 255, 0); }
-    .line2 { color: rgb(0, 220, 0); }
-    .line3 { color: rgb(0, 200, 0); }
-    .line4 { color: rgb(0, 180, 0); }
-    .line5 { color: rgb(0, 160, 0); }
-    .line6 { color: rgb(0, 140, 0); }
-
-    .footer {
-      text-align: right;
-      font-size: 11px;
-      color: #00cc00;
-      margin: 5px 0 20px 0;
-      font-weight: bold;
-      user-select: none;
-    }
-
-    .login-container {
-      width: 300px;
-      margin: 20px 0;
-      border: 1px solid #00cc00;
-      padding: 20px;
-    }
-
-    label, input {
-      display: block;
-      width: 100%;
-      margin-bottom: 10px;
-      background: black;
-      border: 1px solid #00cc00;
-      color: #00ff00;
-      font-family: 'Courier New', monospace;
-      font-size: 14px;
-      padding: 5px;
-      box-sizing: border-box;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: #00ff00;
-    }
-
-    button {
-      background: #00cc00;
-      border: none;
-      color: black;
-      font-weight: bold;
-      padding: 8px;
-      cursor: pointer;
-      font-family: 'Courier New', monospace;
-      font-size: 14px;
-    }
-
-    .error {
-      color: darkred;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    #terminal {
-      width: 100%;
-      min-height: 60vh;
-      background-color: black;
-      border: 1px solid #00cc00;
-      color: #00ff00;
-      font-family: 'Courier New', monospace;
-      font-size: 14px;
-      padding: 10px;
-      box-sizing: border-box;
-      white-space: pre-wrap;
-      overflow-y: auto;
-      outline: none;
-      display: none;
-    }
-
-    .line-block {
-      margin: 0;
-    }
-
-    .input-line {
-      display: flex;
-      align-items: center;
-    }
-
-    .input-line span {
-      user-select: none;
-    }
-
-    .cmd-input {
-      background: transparent;
-      border: none;
-      color: #00ff00;
-      font-family: inherit;
-      font-size: inherit;
-      outline: none;
-      width: 100%;
-    }
-  </style>
+  .footer {
+    text-align: right;
+    font-size: 11px;
+    color: #00cc00;
+    margin: 5px 0 20px 0;
+    font-weight: bold;
+    user-select: none;
+  }
+  #terminal {
+    width: 100%;
+    height: 60vh;
+    background-color: black;
+    border: 1px solid #00cc00;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    padding: 10px;
+    box-sizing: border-box;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    outline: none;
+  }
+  .line-block {
+    margin: 0;
+    padding: 0;
+    user-select: none;
+  }
+  .input-line {
+    display: block;
+    margin: 0;
+    padding: 0;
+  }
+  .cmd-input {
+    background: black;
+    border: none;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    width: calc(100% - 40px);
+    outline: none;
+  }
+</style>
 </head>
 <body>
 
-<!-- الشعار -->
+<!-- البنر -->
 <pre class="banner-line line1">███████╗██╗    ██╗ █████╗ ██╗    ██╗</pre>
 <pre class="banner-line line2">██╔════╝██║    ██║██╔══██╗██║    ██║</pre>
 <pre class="banner-line line3">███████╗██║ █╗ ██║███████║██║ █╗ ██║</pre>
@@ -130,95 +123,127 @@
 
 <div class="footer">Development By Swaw 305</div>
 
-<!-- تسجيل الدخول -->
+<!-- شاشة تسجيل الدخول -->
 <div id="login" class="login-container">
   <div id="errorMsg" class="error" style="display:none;">Invalid username or password!</div>
-  <label>Username:</label>
-  <input type="text" id="username" autocomplete="off" />
-  <label>Password:</label>
-  <input type="password" id="password" autocomplete="off" />
-  <button onclick="login()">Login</button>
+  <label for="username">Username:</label>
+  <input id="username" type="text" autocomplete="off" />
+  <label for="password">Password:</label>
+  <input id="password" type="password" autocomplete="off" />
+  <button id="loginBtn">Login</button>
 </div>
 
 <!-- الطرفية -->
 <div id="terminal"></div>
 
 <script>
-  const loginBox = document.getElementById("login");
-  const terminal = document.getElementById("terminal");
-  const usernameInput = document.getElementById("username");
-  const passwordInput = document.getElementById("password");
-  const errorMsg = document.getElementById("errorMsg");
+  const loginDiv = document.getElementById('login');
+  const terminal = document.getElementById('terminal');
+  const loginBtn = document.getElementById('loginBtn');
+  const errorMsg = document.getElementById('errorMsg');
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
 
-  const prompt = '┌──(swaw㉿hostname)-[~/directory]\n└─> ';
+  const promptPrefix = "└─> ";
+  const headerLine = "┌──(swaw㉿hostname)-[~/directory]";
 
-  function login() {
-    const user = usernameInput.value.trim();
-    const pass = passwordInput.value.trim();
-    if (user === "swaw" && pass === "1313") {
-      errorMsg.style.display = "none";
-      loginBox.style.display = "none";
-      terminal.style.display = "block";
-      printLine(prompt, true);
-    } else {
-      errorMsg.style.display = "block";
-    }
+  // طباعة سطر رأس التيرمنال
+  function printHeader() {
+    const line = document.createElement('div');
+    line.className = 'line-block';
+    line.textContent = headerLine;
+    terminal.appendChild(line);
   }
 
-  function printLine(text, inputLine = false) {
-    const line = document.createElement("div");
-    line.className = "line-block";
-    if (inputLine) {
-      const inputWrap = document.createElement("div");
-      inputWrap.className = "input-line";
+  // طباعة البادئة (السطرين) مع حقل إدخال
+  function printPrompt() {
+    printHeader();
 
-      const span = document.createElement("span");
-      span.textContent = text;
+    const inputWrap = document.createElement("div");
+    inputWrap.className = "input-line";
 
-      const input = document.createElement("input");
-      input.className = "cmd-input";
-      input.autocomplete = "off";
+    const span = document.createElement("span");
+    span.textContent = promptPrefix;
 
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") {
-          const cmd = input.value;
-          input.disabled = true;
-          processCommand(cmd);
-        }
-      });
+    const input = document.createElement("input");
+    input.className = "cmd-input";
+    input.autocomplete = "off";
+    input.spellcheck = false;
 
-      inputWrap.appendChild(span);
-      inputWrap.appendChild(input);
-      terminal.appendChild(inputWrap);
-      input.focus();
-    } else {
-      line.textContent = text;
-      terminal.appendChild(line);
-    }
+    // التعامل مع أمر الانتر
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        const cmd = input.value.trim();
+        if (!cmd) return; // لا تنفذ أوامر فارغة
 
+        input.disabled = true; // قفل الإدخال بعد الكتابة
+        inputWrap.removeChild(input); // إزالة input
+        const enteredCmd = document.createElement("span");
+        enteredCmd.textContent = cmd;
+        inputWrap.appendChild(enteredCmd);
+
+        processCommand(cmd);
+      }
+    });
+
+    inputWrap.appendChild(span);
+    inputWrap.appendChild(input);
+    terminal.appendChild(inputWrap);
+    input.focus();
     terminal.scrollTop = terminal.scrollHeight;
   }
 
+  // معالجة الأوامر
   function processCommand(cmd) {
     let output = '';
-    switch (cmd.trim().toLowerCase()) {
+    switch(cmd.toLowerCase()) {
       case 'help':
-        output = 'Available commands:\nhelp - show this message\nclear - clear the screen\nabout - info about terminal\n';
+        output = 'Available commands:\nhelp - show this message\nclear - clear screen\nabout - info about terminal\n';
         break;
       case 'clear':
-        terminal.innerHTML = '';
-        printLine(prompt, true);
+        terminal.textContent = '';
+        printPrompt();
         return;
       case 'about':
-        output = 'Swaw CMD Emulator\nVersion 1.0\nDeveloped by Swaw 305\nThis is a demo CLI built using HTML/JS.\n';
+        output = 'Swaw CMD Emulator\nVersion 1.0\nDeveloped by Swaw 305\nSimple web-based command line emulator for learning.';
         break;
       default:
-        output = `Command "${cmd}" not found.\n`;
+        output = `Command "${cmd}" not found.`;
     }
 
-    printLine(output);
-    printLine(prompt, true);
+    // طباعة ناتج الأمر
+    const outputLine = document.createElement("div");
+    outputLine.textContent = output;
+    terminal.appendChild(outputLine);
+
+    printPrompt();
   }
+
+  // حدث تسجيل الدخول
+  loginBtn.addEventListener('click', () => {
+    const user = usernameInput.value.trim();
+    const pass = passwordInput.value.trim();
+    if(user === 'swaw' && pass === '1313') {
+      errorMsg.style.display = 'none';
+      loginDiv.style.display = 'none';
+      terminal.style.display = 'block';
+      printPrompt();
+    } else {
+      errorMsg.style.display = 'block';
+    }
+  });
+
+  // دعم زر انتر في حقول اليوزر والبارسورد
+  [usernameInput, passwordInput].forEach(input => {
+    input.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter') {
+        loginBtn.click();
+      }
+    });
+  });
+
 </script>
+
 </body>
 </html>
