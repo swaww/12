@@ -49,6 +49,12 @@
   .prompt {
     display: inline;
   }
+  .header-line {
+    margin: 0;
+    white-space: pre;
+    user-select: none;
+    font-weight: bold;
+  }
 </style>
 </head>
 <body>
@@ -68,8 +74,20 @@
 
 <script>
   const terminal = document.getElementById('terminal');
-  const promptStr = '╚════> ';
-  
+  const promptStr = '└─> ';
+  const headerLines = [
+    '┌──(swaw㉿hostname)-[~/directory]',
+  ];
+
+  function appendHeader() {
+    headerLines.forEach(line => {
+      const lineNode = document.createElement('div');
+      lineNode.classList.add('header-line');
+      lineNode.textContent = line;
+      terminal.appendChild(lineNode);
+    });
+  }
+
   function appendPrompt() {
     const promptSpan = document.createElement('span');
     promptSpan.classList.add('prompt');
@@ -83,7 +101,6 @@
     inputSpan.id = 'input';
     terminal.appendChild(inputSpan);
     
-    // Set focus on input span
     placeCaretAtEnd(inputSpan);
   }
 
@@ -108,6 +125,7 @@
         break;
       case 'clear':
         terminal.textContent = '';
+        appendHeader();
         appendPrompt();
         return;
       case 'about':
@@ -138,7 +156,8 @@
     }
   });
 
-  // Initialize terminal with prompt
+  // Initialize terminal with header and prompt
+  appendHeader();
   appendPrompt();
 </script>
 
