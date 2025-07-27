@@ -96,9 +96,15 @@
     user-select: none;
   }
   .input-line {
-    display: block;
+    display: flex;
+    align-items: center;
     margin: 0;
     padding: 0;
+  }
+  .prompt-span {
+    user-select: none;
+    margin-right: 5px;
+    white-space: nowrap;
   }
   .cmd-input {
     background: black;
@@ -106,7 +112,7 @@
     color: #00ff00;
     font-family: 'Courier New', monospace;
     font-size: 14px;
-    width: calc(100% - 40px);
+    flex: 1;
     outline: none;
   }
 </style>
@@ -134,7 +140,7 @@
 </div>
 
 <!-- الطرفية -->
-<div id="terminal"></div>
+<div id="terminal" style="display:none;"></div>
 
 <script>
   const loginDiv = document.getElementById('login');
@@ -144,10 +150,9 @@
   const usernameInput = document.getElementById('username');
   const passwordInput = document.getElementById('password');
 
-  const promptPrefix = "└─> ";
+  const promptPrefix = "└─>";
   const headerLine = "┌──(swaw㉿hostname)-[~/directory]";
 
-  // طباعة سطر رأس التيرمنال
   function printHeader() {
     const line = document.createElement('div');
     line.className = 'line-block';
@@ -155,46 +160,45 @@
     terminal.appendChild(line);
   }
 
-  // طباعة البادئة (السطرين) مع حقل إدخال
   function printPrompt() {
-    printHeader();
-
+    // فقط طباعة السطر الحالي (بدون طباعة الهيدر في كل مرة)
     const inputWrap = document.createElement("div");
     inputWrap.className = "input-line";
 
-    const span = document.createElement("span");
-    span.textContent = promptPrefix;
+    const promptSpan = document.createElement("span");
+    promptSpan.className = "prompt-span";
+    promptSpan.textContent = promptPrefix;
 
     const input = document.createElement("input");
     input.className = "cmd-input";
     input.autocomplete = "off";
     input.spellcheck = false;
 
-    // التعامل مع أمر الانتر
+    // الحدث للتعامل مع مفتاح Enter
     input.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
         const cmd = input.value.trim();
-        if (!cmd) return; // لا تنفذ أوامر فارغة
+        if (!cmd) return; // تجاهل الأوامر الفارغة
 
-        input.disabled = true; // قفل الإدخال بعد الكتابة
-        inputWrap.removeChild(input); // إزالة input
-        const enteredCmd = document.createElement("span");
-        enteredCmd.textContent = cmd;
-        inputWrap.appendChild(enteredCmd);
+        input.disabled = true;
+        inputWrap.removeChild(input);
+
+        const enteredCmdSpan = document.createElement("span");
+        enteredCmdSpan.textContent = cmd;
+        inputWrap.appendChild(enteredCmdSpan);
 
         processCommand(cmd);
       }
     });
 
-    inputWrap.appendChild(span);
+    inputWrap.appendChild(promptSpan);
     inputWrap.appendChild(input);
     terminal.appendChild(inputWrap);
     input.focus();
     terminal.scrollTop = terminal.scrollHeight;
   }
 
-  // معالجة الأوامر
   function processCommand(cmd) {
     let output = '';
     switch(cmd.toLowerCase()) {
@@ -203,6 +207,7 @@
         break;
       case 'clear':
         terminal.textContent = '';
+        printHeader();
         printPrompt();
         return;
       case 'about':
@@ -212,7 +217,6 @@
         output = `Command "${cmd}" not found.`;
     }
 
-    // طباعة ناتج الأمر
     const outputLine = document.createElement("div");
     outputLine.textContent = output;
     terminal.appendChild(outputLine);
@@ -220,7 +224,6 @@
     printPrompt();
   }
 
-  // حدث تسجيل الدخول
   loginBtn.addEventListener('click', () => {
     const user = usernameInput.value.trim();
     const pass = passwordInput.value.trim();
@@ -228,13 +231,13 @@
       errorMsg.style.display = 'none';
       loginDiv.style.display = 'none';
       terminal.style.display = 'block';
+      printHeader();
       printPrompt();
     } else {
       errorMsg.style.display = 'block';
     }
   });
 
-  // دعم زر انتر في حقول اليوزر والبارسورد
   [usernameInput, passwordInput].forEach(input => {
     input.addEventListener('keydown', (e) => {
       if(e.key === 'Enter') {
@@ -242,7 +245,6 @@
       }
     });
   });
-
 </script>
 
 </body>
