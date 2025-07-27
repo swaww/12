@@ -14,8 +14,9 @@
   }
   .banner-line {
     line-height: 1;
+    margin: 0;
+    padding: 0;
     white-space: pre;
-    margin: 0 0 3px 0;
     user-select: none;
   }
   .line1 { color: rgb(0, 255, 0); }
@@ -24,6 +25,7 @@
   .line4 { color: rgb(0, 180, 0); }
   .line5 { color: rgb(0, 160, 0); }
   .line6 { color: rgb(0, 140, 0); }
+
   .footer {
     text-align: right;
     font-size: 11px;
@@ -77,14 +79,14 @@
   const terminal = document.getElementById('terminal');
   const promptStr = '└─> ';
   const headerLines = [
-    '┌──(swaw㉿hostname)-[~/directory]',
+    '┌──(swaw㉿hostname)-[~/directory]'
   ];
 
   function appendHeader() {
     headerLines.forEach(line => {
       const lineNode = document.createElement('div');
       lineNode.classList.add('header-line');
-      lineNode.style.marginBottom = '0';  // إزالة المسافة السفلية
+      lineNode.style.marginBottom = '0';  // إزالة الفراغ تحت السطر
       lineNode.textContent = line;
       terminal.appendChild(lineNode);
     });
@@ -96,7 +98,6 @@
     promptSpan.textContent = promptStr;
     terminal.appendChild(promptSpan);
     
-    // Create a span for user input
     const inputSpan = document.createElement('span');
     inputSpan.contentEditable = true;
     inputSpan.spellcheck = false;
@@ -106,14 +107,13 @@
     placeCaretAtEnd(inputSpan);
   }
 
-  // Helper to put caret at end of element
   function placeCaretAtEnd(el) {
     el.focus();
     if (typeof window.getSelection != "undefined" && typeof document.createRange != "undefined") {
-      var range = document.createRange();
+      const range = document.createRange();
       range.selectNodeContents(el);
       range.collapse(false);
-      var sel = window.getSelection();
+      const sel = window.getSelection();
       sel.removeAllRanges();
       sel.addRange(range);
     }
@@ -136,13 +136,11 @@
       default:
         output = `Command "${cmd}" not found.\n`;
     }
-    // Remove input span to finalize command line
     const inputSpan = document.getElementById('input');
     if(inputSpan) {
       inputSpan.contentEditable = false;
       inputSpan.id = '';
     }
-    // Append output and new prompt
     terminal.appendChild(document.createTextNode('\n' + output));
     appendPrompt();
   }
@@ -158,7 +156,6 @@
     }
   });
 
-  // Initialize terminal with header and prompt
   appendHeader();
   appendPrompt();
 </script>
