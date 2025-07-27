@@ -3,96 +3,222 @@
 <head>
   <meta charset="UTF-8" />
   <title>Swaw CMD Emulator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
-      background: black;
-      color: #00FF00;
-      font-family: monospace;
-      white-space: pre;
+      background-color: black;
+      color: #00ff00;
+      font-family: 'Courier New', monospace;
+      padding: 15px;
       margin: 0;
+    }
+
+    .banner-line {
+      line-height: 1;
+      margin: 0;
+      white-space: pre;
+      user-select: none;
+    }
+
+    .line1 { color: rgb(0, 255, 0); }
+    .line2 { color: rgb(0, 220, 0); }
+    .line3 { color: rgb(0, 200, 0); }
+    .line4 { color: rgb(0, 180, 0); }
+    .line5 { color: rgb(0, 160, 0); }
+    .line6 { color: rgb(0, 140, 0); }
+
+    .footer {
+      text-align: right;
+      font-size: 11px;
+      color: #00cc00;
+      margin: 5px 0 20px 0;
+      font-weight: bold;
+      user-select: none;
+    }
+
+    .login-container {
+      width: 300px;
+      margin: 20px 0;
+      border: 1px solid #00cc00;
       padding: 20px;
-      overflow-x: hidden;
     }
-    #terminal {
-      outline: none;
-    }
-    .input-line {
-      display: inline;
-    }
-    .error {
-      color: #8888FF;
-      margin-top: 0;
-    }
-    input {
+
+    label, input {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
       background: black;
-      color: #00FF00;
-      border: none;
-      font-family: monospace;
-      font-size: 16px;
+      border: 1px solid #00cc00;
+      color: #00ff00;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      padding: 5px;
+      box-sizing: border-box;
+    }
+
+    input:focus {
       outline: none;
+      border-color: #00ff00;
+    }
+
+    button {
+      background: #00cc00;
+      border: none;
+      color: black;
+      font-weight: bold;
+      padding: 8px;
+      cursor: pointer;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+    }
+
+    .error {
+      color: darkred;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    #terminal {
+      width: 100%;
+      min-height: 60vh;
+      background-color: black;
+      border: 1px solid #00cc00;
+      color: #00ff00;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      padding: 10px;
+      box-sizing: border-box;
+      white-space: pre-wrap;
+      overflow-y: auto;
+      outline: none;
+      display: none;
+    }
+
+    .line-block {
+      margin: 0;
+    }
+
+    .input-line {
+      display: flex;
+      align-items: center;
+    }
+
+    .input-line span {
+      user-select: none;
+    }
+
+    .cmd-input {
+      background: transparent;
+      border: none;
+      color: #00ff00;
+      font-family: inherit;
+      font-size: inherit;
+      outline: none;
+      width: 100%;
     }
   </style>
 </head>
 <body>
-  <div id="terminal">
-    ███████╗██╗    ██╗ █████╗ ██╗    ██╗
-    ██╔════╝██║    ██║██╔══██╗██║    ██║
-    ███████╗██║ █╗ ██║███████║██║ █╗ ██║
-    ╚════██║██║███╗██║██╔══██║██║███╗██║
-    ███████║╚███╔███╔╝██║  ██║╚███╔███╔╝
-    ╚══════╝ ╚══╝╚══╝ ╚═╝  ╚═╝ ╚══╝╚══╝
 
-    ┌──(swaw㉿hostname)-[~/directory]
-    └─> 
-  </div>
-  <div id="login">
-    Username: <input type="text" id="username"><br>
-    Password: <input type="password" id="password">
-    <div id="err" class="error"></div>
-  </div>
+<!-- الشعار -->
+<pre class="banner-line line1">███████╗██╗    ██╗ █████╗ ██╗    ██╗</pre>
+<pre class="banner-line line2">██╔════╝██║    ██║██╔══██╗██║    ██║</pre>
+<pre class="banner-line line3">███████╗██║ █╗ ██║███████║██║ █╗ ██║</pre>
+<pre class="banner-line line4">╚════██║██║███╗██║██╔══██║██║███╗██║</pre>
+<pre class="banner-line line5">███████║╚███╔███╔╝██║  ██║╚███╔███╔╝</pre>
+<pre class="banner-line line6">╚══════╝ ╚══╝╚══╝ ╚═╝  ╚═╝ ╚══╝╚══╝</pre>
 
-  <script>
-    const user="swaw", pass="1313";
-    const term=document.getElementById("terminal");
-    const loginDiv=document.getElementById("login");
-    const errDiv=document.getElementById("err");
-    document.getElementById("password").addEventListener("keydown", e => {
-      if(e.key==="Enter"){
-        let u=document.getElementById("username").value;
-        let p=document.getElementById("password").value;
-        if(u===user && p===pass){
-          loginDiv.remove();
-          startSession();
-        } else {
-          errDiv.textContent="Access Denied. Try again.";
+<div class="footer">Development By Swaw 305</div>
+
+<!-- تسجيل الدخول -->
+<div id="login" class="login-container">
+  <div id="errorMsg" class="error" style="display:none;">Invalid username or password!</div>
+  <label>Username:</label>
+  <input type="text" id="username" autocomplete="off" />
+  <label>Password:</label>
+  <input type="password" id="password" autocomplete="off" />
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- الطرفية -->
+<div id="terminal"></div>
+
+<script>
+  const loginBox = document.getElementById("login");
+  const terminal = document.getElementById("terminal");
+  const usernameInput = document.getElementById("username");
+  const passwordInput = document.getElementById("password");
+  const errorMsg = document.getElementById("errorMsg");
+
+  const prompt = '┌──(swaw㉿hostname)-[~/directory]\n└─> ';
+
+  function login() {
+    const user = usernameInput.value.trim();
+    const pass = passwordInput.value.trim();
+    if (user === "swaw" && pass === "1313") {
+      errorMsg.style.display = "none";
+      loginBox.style.display = "none";
+      terminal.style.display = "block";
+      printLine(prompt, true);
+    } else {
+      errorMsg.style.display = "block";
+    }
+  }
+
+  function printLine(text, inputLine = false) {
+    const line = document.createElement("div");
+    line.className = "line-block";
+    if (inputLine) {
+      const inputWrap = document.createElement("div");
+      inputWrap.className = "input-line";
+
+      const span = document.createElement("span");
+      span.textContent = text;
+
+      const input = document.createElement("input");
+      input.className = "cmd-input";
+      input.autocomplete = "off";
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          const cmd = input.value;
+          input.disabled = true;
+          processCommand(cmd);
         }
-      }
-    });
-    function startSession(){
-      term.innerHTML += "\n";
-      createPrompt();
-      document.getElementById("input").focus();
+      });
+
+      inputWrap.appendChild(span);
+      inputWrap.appendChild(input);
+      terminal.appendChild(inputWrap);
+      input.focus();
+    } else {
+      line.textContent = text;
+      terminal.appendChild(line);
     }
-    function createPrompt(){
-      const line = document.createElement("div");
-      line.innerHTML = "┌──(swaw㉿hostname)-[~/directory]<br>└─> <span class='input-line'><input id='input' type='text'></span>";
-      term.appendChild(line);
-      document.getElementById("input").addEventListener("keydown", onEnter);
+
+    terminal.scrollTop = terminal.scrollHeight;
+  }
+
+  function processCommand(cmd) {
+    let output = '';
+    switch (cmd.trim().toLowerCase()) {
+      case 'help':
+        output = 'Available commands:\nhelp - show this message\nclear - clear the screen\nabout - info about terminal\n';
+        break;
+      case 'clear':
+        terminal.innerHTML = '';
+        printLine(prompt, true);
+        return;
+      case 'about':
+        output = 'Swaw CMD Emulator\nVersion 1.0\nDeveloped by Swaw 305\nThis is a demo CLI built using HTML/JS.\n';
+        break;
+      default:
+        output = `Command "${cmd}" not found.\n`;
     }
-    function onEnter(e){
-      if(e.key==="Enter"){
-        let txt=e.target.value;
-        const prev= e.target.parentElement.parentElement;
-        prev.innerHTML = prev.innerHTML + txt;
-        e.target.remove();
-        errDiv.textContent="";
-        createPrompt();
-        scrollToBottom();
-      }
-    }
-    function scrollToBottom(){
-      window.scrollTo(0, document.body.scrollHeight);
-    }
-  </script>
+
+    printLine(output);
+    printLine(prompt, true);
+  }
+</script>
 </body>
 </html>
