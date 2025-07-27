@@ -90,16 +90,16 @@
     overflow-y: auto;
     outline: none;
   }
-  .line-block {
+  .line-block, .input-line {
     margin: 0;
     padding: 0;
+    line-height: 1;
     user-select: none;
   }
   .input-line {
     display: flex;
     align-items: center;
-    margin: 0;
-    padding: 0;
+    margin-top: 0;
   }
   .prompt-span {
     user-select: none;
@@ -161,7 +161,7 @@
   }
 
   function printPrompt() {
-    // فقط طباعة السطر الحالي (بدون طباعة الهيدر في كل مرة)
+    // طباعة السطر الحالي مع السهم والادخال في نفس السطر وبدون فراغ
     const inputWrap = document.createElement("div");
     inputWrap.className = "input-line";
 
@@ -174,7 +174,7 @@
     input.autocomplete = "off";
     input.spellcheck = false;
 
-    // الحدث للتعامل مع مفتاح Enter
+    // حدث مفتاح Enter لمعالجة الأمر
     input.addEventListener("keydown", (e) => {
       if (e.key === "Enter") {
         e.preventDefault();
