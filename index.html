@@ -61,7 +61,7 @@
 
 <script>
   const terminal = document.getElementById('terminal');
-  const prompt = 'C:\\Users\\Swaw> ';
+  const prompt = '╚════> ';
   let commandStart = 0;
 
   function init() {
@@ -91,7 +91,6 @@
   }
 
   terminal.addEventListener('keydown', (e) => {
-    // منع التعديل قبل بداية أمر جديد
     if (terminal.selectionStart < commandStart) {
       terminal.selectionStart = terminal.selectionEnd = terminal.value.length;
     }
@@ -102,7 +101,6 @@
       processCommand(cmd);
     }
 
-    // منع حذف أو تعديل البادئة السابقة
     if (e.key === 'Backspace' && terminal.selectionStart <= commandStart) {
       e.preventDefault();
     }
