@@ -51,6 +51,7 @@
   }
   .header-line {
     margin: 0;
+    line-height: 1;
     white-space: pre;
     user-select: none;
     font-weight: bold;
@@ -83,6 +84,7 @@
     headerLines.forEach(line => {
       const lineNode = document.createElement('div');
       lineNode.classList.add('header-line');
+      lineNode.style.marginBottom = '0';  // إزالة المسافة السفلية
       lineNode.textContent = line;
       terminal.appendChild(lineNode);
     });
