@@ -12,6 +12,48 @@
     padding: 15px;
     margin: 0;
   }
+  .login-container {
+    width: 300px;
+    margin: 20px 0 20px 0;
+    border: 1px solid #00cc00;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  label, input {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    background: black;
+    border: 1px solid #00cc00;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    padding: 5px;
+    box-sizing: border-box;
+  }
+  input:focus {
+    outline: none;
+    border-color: #00ff00;
+  }
+  button {
+    background: #00cc00;
+    border: none;
+    color: black;
+    font-weight: bold;
+    padding: 8px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+  }
+  button:hover {
+    background: #00ff00;
+  }
+  .error {
+    color: red;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-family: 'Courier New', monospace;
+  }
   .banner-line {
     line-height: 1;
     margin: 0;
@@ -47,6 +89,7 @@
     white-space: pre-wrap;
     overflow-y: auto;
     outline: none;
+    display: none;
   }
   .prompt {
     display: inline;
@@ -72,11 +115,27 @@
 
 <div class="footer">Development By Swaw 305</div>
 
+<!-- شاشة تسجيل الدخول -->
+<div id="login" class="login-container">
+  <div id="errorMsg" class="error" style="display:none;">اسم المستخدم أو كلمة المرور خطأ!</div>
+  <label for="username">Username:</label>
+  <input id="username" type="text" autocomplete="off" />
+  <label for="password">Password:</label>
+  <input id="password" type="password" autocomplete="off" />
+  <button id="loginBtn">Login</button>
+</div>
+
 <!-- الطرفية -->
 <pre id="terminal" contenteditable spellcheck="false"></pre>
 
 <script>
+  const loginDiv = document.getElementById('login');
   const terminal = document.getElementById('terminal');
+  const loginBtn = document.getElementById('loginBtn');
+  const errorMsg = document.getElementById('errorMsg');
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+
   const promptStr = '└─> ';
   const headerLines = [
     '┌──(swaw㉿hostname)-[~/directory]'
@@ -86,7 +145,7 @@
     headerLines.forEach(line => {
       const lineNode = document.createElement('div');
       lineNode.classList.add('header-line');
-      lineNode.style.marginBottom = '0';  // إزالة الفراغ تحت السطر
+      lineNode.style.marginBottom = '0';
       lineNode.textContent = line;
       terminal.appendChild(lineNode);
     });
@@ -97,13 +156,13 @@
     promptSpan.classList.add('prompt');
     promptSpan.textContent = promptStr;
     terminal.appendChild(promptSpan);
-    
+
     const inputSpan = document.createElement('span');
     inputSpan.contentEditable = true;
     inputSpan.spellcheck = false;
     inputSpan.id = 'input';
     terminal.appendChild(inputSpan);
-    
+
     placeCaretAtEnd(inputSpan);
   }
 
@@ -131,7 +190,7 @@
         appendPrompt();
         return;
       case 'about':
-        output = 'Simple CMD Emulator by Swaw 305\n';
+        output = 'Swaw CMD Emulator\nVersion 1.0\nDeveloped by Swaw 305\nThis is a simple web-based command line emulator for demo and learning purposes.\n';
         break;
       default:
         output = `Command "${cmd}" not found.\n`;
@@ -145,20 +204,30 @@
     appendPrompt();
   }
 
-  terminal.addEventListener('keydown', (e) => {
-    const inputSpan = document.getElementById('input');
-    if(!inputSpan) return;
-    
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      const cmd = inputSpan.textContent;
-      processCommand(cmd);
+  loginBtn.addEventListener('click', () => {
+    const user = usernameInput.value.trim();
+    const pass = passwordInput.value.trim();
+    if(user === 'swaw' && pass === '1313') {
+      errorMsg.style.display = 'none';
+      loginDiv.style.display = 'none';
+      terminal.style.display = 'block';
+      appendHeader();
+      appendPrompt();
+      terminal.focus();
+    } else {
+      errorMsg.style.display = 'block';
     }
   });
 
-  appendHeader();
-  appendPrompt();
-</script>
+  // Enter key on inputs to trigger login
+  [usernameInput, passwordInput].forEach(input => {
+    input.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter') {
+        loginBtn.click();
+      }
+    });
+  });
 
+</script>
 </body>
 </html>
